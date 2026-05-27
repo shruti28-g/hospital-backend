@@ -2,75 +2,37 @@ package com.hms.hospitalbackend.controller;
 
 import com.hms.hospitalbackend.entity.Patient;
 import com.hms.hospitalbackend.service.PatientService;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/patients")
-
+@CrossOrigin(origins = "*")
 public class PatientController {
 
-    @Autowired
-    private PatientService patientService;
+    private final PatientService service;
 
-
-    // SAVE PATIENT
-    @PostMapping
-    public Patient savePatient(
-            @RequestBody Patient patient)
-    {
-
-        return patientService
-                .savePatient(patient);
-
+    public PatientController(PatientService service){
+        this.service = service;
     }
 
-
-    // GET ALL PATIENTS
     @GetMapping
-    public List<Patient> getAllPatients()
-    {
-
-        return patientService
-                .getAllPatients();
-
+    public List<Patient> getAll(){
+        return service.getAllPatients();
     }
 
+    @PostMapping
+    public Patient save(
+            @RequestBody Patient patient
+    ){
+        return service.savePatient(patient);
+    }
 
-    // DELETE PATIENT
     @DeleteMapping("/{id}")
-
-    public String deletePatient(
-            @PathVariable Long id)
-    {
-
-        patientService
-                .deletePatient(id);
-
-        return "Patient deleted successfully";
-
+    public void delete(
+            @PathVariable Long id
+    ){
+        service.deletePatient(id);
     }
-
-
-    // UPDATE PATIENT
-    @PutMapping("/{id}")
-
-    public Patient updatePatient(
-
-            @PathVariable Long id,
-
-            @RequestBody
-            Patient patient)
-    {
-
-        return patientService
-                .updatePatient(
-                        id,
-                        patient);
-
-    }
-
 }
